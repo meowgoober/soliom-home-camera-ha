@@ -1,0 +1,220 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Soliom Home account",
+        "description": "Sign in with the same e-mail and password you use in the Soliom Home app. Region is the two-letter country code of your Soliom account and the country calling code is used to select the correct cloud cluster.",
+        "data": {
+          "email": "E-mail",
+          "password": "Password",
+          "region": "Region",
+          "country_code": "Country calling code"
+        },
+        "data_description": {
+          "email": "Soliom Home account e-mail address.",
+          "password": "Soliom Home account password (stored in the Home Assistant config entry).",
+          "region": "ISO 3166-1 alpha-2 code, for example US, GB or DE.",
+          "country_code": "International calling code, for example 1 for US/Canada, 44 for the UK, 49 for Germany."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Soliom Home",
+        "description": "The Soliom cloud rejected the stored credentials. Enter the password for {email}.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The e-mail or password was rejected by the Soliom cloud.",
+      "cannot_connect": "Could not connect to the Soliom cloud.",
+      "api_error": "The Soliom cloud returned an API error.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This Soliom account is already configured.",
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Soliom Home options",
+        "menu_options": {
+          "general": "Polling interval",
+          "device": "Camera local settings"
+        }
+      },
+      "general": {
+        "title": "Polling interval",
+        "description": "How often cloud device status and events are refreshed.",
+        "data": {
+          "scan_interval": "Scan interval (seconds)"
+        }
+      },
+      "device": {
+        "title": "Choose a camera",
+        "data": {
+          "device": "Camera"
+        }
+      },
+      "device_settings": {
+        "title": "Local settings for {device}",
+        "description": "Live view uses RTSP over your local network. Leave the host empty to disable local live view and controls. The cloud reports this camera's LAN address as: {ip}. {p2p_password_hint}",
+        "data": {
+          "local_host": "Local host or IP",
+          "rtsp_port": "RTSP port",
+          "rtsp_username": "RTSP username",
+          "rtsp_password": "RTSP password",
+          "rtsp_channel": "RTSP channel",
+          "rtsp_stream": "RTSP stream (0=main, 1=sub)",
+          "rtsp_url": "Custom RTSP URL template",
+          "snapshot_url": "Custom snapshot URL template",
+          "local_https": "Use HTTPS for local CGI",
+          "verify_ssl": "Verify the local HTTPS certificate"
+        },
+        "data_description": {
+          "local_host": "IP address or hostname of the camera on your LAN. You may include an HTTP port.",
+          "rtsp_port": "Usually 554.",
+          "rtsp_username": "Usually admin.",
+          "rtsp_password": "Leave empty to use the camera password from your Soliom account.",
+          "rtsp_channel": "Camera channel, usually 1.",
+          "rtsp_stream": "0 for the main stream, 1 for the sub stream.",
+          "rtsp_url": "Optional. Placeholders: {host}, {port}, {username}, {password}, {user}, {passwd}, {channel}, {stream}, {sn}.",
+          "snapshot_url": "Optional. Placeholders: {host}, {port}, {scheme}, {username}, {password}, {channel}, {sn}, {base_url}.",
+          "local_https": "Enable only if the camera's CGI interface uses HTTPS.",
+          "verify_ssl": "Disable for the self-signed certificates used by most cameras."
+        }
+      }
+    },
+    "abort": {
+      "no_devices": "No Soliom devices were found for this account."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery": {
+        "name": "Battery"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi signal"
+      },
+      "storage_used": {
+        "name": "SD card used"
+      },
+      "storage_free": {
+        "name": "SD card free"
+      },
+      "last_event_time": {
+        "name": "Last event time"
+      },
+      "last_event_type": {
+        "name": "Last event"
+      },
+      "events_24h": {
+        "name": "Events (24 h)"
+      },
+      "unread_events": {
+        "name": "Unread events"
+      }
+    },
+    "binary_sensor": {
+      "motion": {
+        "name": "Motion"
+      },
+      "online": {
+        "name": "Online"
+      },
+      "charging": {
+        "name": "Charging"
+      }
+    },
+    "switch": {
+      "motion_detection": {
+        "name": "Motion detection"
+      },
+      "siren": {
+        "name": "Siren"
+      },
+      "spotlight": {
+        "name": "Spotlight"
+      }
+    },
+    "button": {
+      "reboot": {
+        "name": "Restart camera"
+      }
+    },
+    "event": {
+      "events": {
+        "name": "Events"
+      }
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "PTZ",
+      "description": "Move a Soliom camera using its local Xiongmai PTZ CGI interface.",
+      "fields": {
+        "entity_id": {
+          "name": "Camera",
+          "description": "Soliom camera entity with a configured local host."
+        },
+        "direction": {
+          "name": "Direction",
+          "description": "Movement, zoom, focus, preset or stop command."
+        },
+        "speed": {
+          "name": "Speed",
+          "description": "PTZ speed from 1 to 8."
+        },
+        "preset": {
+          "name": "Preset",
+          "description": "Preset number for preset commands."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "Movement time in seconds before an automatic stop. Zero leaves the camera moving."
+        }
+      }
+    },
+    "reboot": {
+      "name": "Reboot camera",
+      "description": "Reboot the camera through its local CGI interface.",
+      "fields": {
+        "entity_id": {
+          "name": "Camera",
+          "description": "Soliom camera entity with a configured local host."
+        }
+      }
+    },
+    "cgi": {
+      "name": "Run CGI command",
+      "description": "Send an arbitrary path to the camera's local CGI interface. For advanced users.",
+      "fields": {
+        "entity_id": {
+          "name": "Camera",
+          "description": "Soliom camera entity with a configured local host."
+        },
+        "path": {
+          "name": "CGI path",
+          "description": "Path beginning with /cgi-bin/, for example /cgi-bin/magicBox.cgi?action=getDeviceType."
+        }
+      }
+    },
+    "set_config": {
+      "name": "Set camera config",
+      "description": "Set a configManager.cgi value on the camera. For advanced users.",
+      "fields": {
+        "entity_id": {
+          "name": "Camera",
+          "description": "Soliom camera entity with a configured local host."
+        },
+        "setting": {
+          "name": "Setting",
+          "description": "Setting expression, for example MotionDetect[0].Enable=true."
+        }
+      }
+    }
+  }
+}

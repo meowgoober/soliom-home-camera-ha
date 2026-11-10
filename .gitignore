@@ -1,0 +1,10 @@
+# added by Gitify
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+*.swp
+.env
+.env.*
+!.env.example

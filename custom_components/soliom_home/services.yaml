@@ -1,0 +1,82 @@
+ptz:
+  target:
+    entity:
+      integration: soliom_home
+      domain: camera
+  fields:
+    direction:
+      required: true
+      selector:
+        select:
+          options:
+            - up
+            - down
+            - left
+            - right
+            - zoom_in
+            - zoom_out
+            - focus_near
+            - focus_far
+            - iris_small
+            - iris_large
+            - preset
+            - set_preset
+            - clear_preset
+            - tour_start
+            - tour_stop
+            - stop
+    speed:
+      selector:
+        number:
+          min: 1
+          max: 8
+          step: 1
+          mode: slider
+      default: 4
+    preset:
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+          mode: box
+      default: 0
+    duration:
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 0.1
+          unit_of_measurement: s
+          mode: slider
+      default: 0
+
+reboot:
+  target:
+    entity:
+      integration: soliom_home
+      domain: camera
+
+cgi:
+  target:
+    entity:
+      integration: soliom_home
+      domain: camera
+  fields:
+    path:
+      required: true
+      example: /cgi-bin/magicBox.cgi?action=getDeviceType
+      selector:
+        text:
+
+set_config:
+  target:
+    entity:
+      integration: soliom_home
+      domain: camera
+  fields:
+    setting:
+      required: true
+      example: MotionDetect[0].Enable=true
+      selector:
+        text:

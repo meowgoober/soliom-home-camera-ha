@@ -1,0 +1,22 @@
+{
+  "domain": "soliom_home",
+  "name": "Soliom Home",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [
+    "stream",
+    "http"
+  ],
+  "documentation": "https://github.com/meowgoober/soliom-home-camera-ha",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/meowgoober/soliom-home-camera-ha/issues",
+  "loggers": [
+    "custom_components.soliom_home"
+  ],
+  "requirements": [
+    "cryptography",
+    "pyibaby==0.1.10"
+  ],
+  "version": "1.1.0"
+}
