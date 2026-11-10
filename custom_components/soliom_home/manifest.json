@@ -1,11 +1,11 @@
 {
   "domain": "soliom_home",
   "name": "Soliom Home",
-  "codeowners": [],
-  "config_flow": true,
   "categories": [
     "security_safety.cameras"
   ],
+  "codeowners": [],
+  "config_flow": true,
   "dependencies": [
     "stream",
     "http"
