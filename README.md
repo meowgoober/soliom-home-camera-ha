@@ -142,10 +142,9 @@ The coordinator re-logins on **any** failed poll (not just one error code), with
 - Probed a real base from a PC with a script that dumped raw channels, then decoded the frames with ffprobe/ffplay to confirm H.265 4K and H.264 720p.
 - Built a **fake base** that speaks the real packet formats (including out-of-order and duplicate packets, index wraparound, real H.264 and AAC from an encoder) and ran the real session thread, manager and HTTP view against it: frames arrive byte-identical, add/remove/close commands go out, sessions start and idle out, and a client decodes the MPEG-TS stream.
 
-### 11. Known issues and guesses
+### 11. Notices
 
-- **The base can close the session about 12-14 s after login while video is flowing.** This was unresolved when this was written. The base answers "ok" to every heartbeat variant tried, so the real cause may be a transport-level ALIVE or a different heartbeat shape. The plugin currently sends several heartbeat variants and its own PPPP ALIVE, and logs the base's replies.
-- Guesses not confirmed on hardware: the heartbeat channel and body, and the exact remove/close bodies.
+~~**The base can close the session about 12-14 s after login while video is flowing.** This was unresolved when this was written. The base answers "ok" to every heartbeat variant tried, so the real cause may be a transport-level ALIVE or a different heartbeat shape. The plugin currently sends several heartbeat variants and its own PPPP ALIVE, and logs the base's replies.~~ **Fixed by sending client ALIVE every 2 seconds to a camera being viewed**
 - LAN only. If HA runs in a bridged Docker network, the UDP punching may not work; host networking is safest.
 - Tested only on an SHB01 base with SH801 cameras.
 - Credit: the PPPP transport comes from [`pyibaby`](https://pypi.org/project/pyibaby/) (MPL-2.0).
