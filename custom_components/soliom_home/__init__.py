@@ -1,5 +1,9 @@
 """The Soliom Home integration."""
 
+from homeassistant.helpers import config_validation as cv
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 from __future__ import annotations
 
 import logging
