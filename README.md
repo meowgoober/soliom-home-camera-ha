@@ -6,6 +6,12 @@ Reverse engineered plugin of the Soliom Home app to add Soliom Home cameras to H
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
+## Preview
+<img width="1258" height="734" alt="image" src="https://github.com/user-attachments/assets/a9e2dfb1-21f3-43d2-9ac4-a9faf0f37c82" />
+<img width="1489" height="779" alt="image" src="https://github.com/user-attachments/assets/a209d3a6-7323-41cd-9bcd-e69bda704e2d" />
+<img width="1103" height="673" alt="image" src="https://github.com/user-attachments/assets/8c04b710-8042-4eed-9d05-0f8d8fd589de" />
+
+
 ## installation for the normal users
 
 **HACS (recommended):** HACS > Integrations > ⋮ > Custom repositories, add `https://github.com/meowgoober/soliom-home-camera-ha` as type *Integration*, install **Soliom Home**, restart Home Assistant.
