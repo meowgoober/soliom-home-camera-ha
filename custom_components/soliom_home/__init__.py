@@ -1,9 +1,5 @@
 """The Soliom Home integration."""
 
-from homeassistant.helpers import config_validation as cv
-
-CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
-
 from __future__ import annotations
 
 import logging
@@ -13,6 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
@@ -38,6 +35,8 @@ from .local import async_probe_local_hosts, hosts_needing_probe
 from .services import async_setup_services
 
 _LOGGER = logging.getLogger(__name__)
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,

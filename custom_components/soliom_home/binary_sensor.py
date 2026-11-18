@@ -136,6 +136,4 @@ class SoliomBinarySensor(SoliomBaseEntity, BinarySensorEntity):
             "event_type": self.coordinator.data.label_for(event),
             "event_id": event.event_id,
             "event_time": event.start_time.isoformat() if event.start_time else None,
-            "thumbnail": event.thumb_url,
-            "video_url": event.video_url,
         }

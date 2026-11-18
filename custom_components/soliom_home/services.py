@@ -10,6 +10,7 @@ from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.service import async_register_admin_service
 
 from .const import DOMAIN, PTZ_COMMANDS
 
@@ -48,7 +49,7 @@ ENTITY_SCHEMA = vol.Schema({vol.Required(ATTR_ENTITY_ID): cv.entity_ids})
 CGI_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
-        vol.Required(ATTR_PATH): cv.string,
+        vol.Required(ATTR_PATH): vol.All(cv.string, vol.Match(r"^/cgi-bin/")),
     }
 )
 
@@ -108,7 +109,9 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     hass.services.async_register(
         DOMAIN, SERVICE_REBOOT, async_reboot, schema=ENTITY_SCHEMA
     )
-    hass.services.async_register(DOMAIN, SERVICE_CGI, async_cgi, schema=CGI_SCHEMA)
-    hass.services.async_register(
-        DOMAIN, SERVICE_SET_CONFIG, async_set_config, schema=SET_CONFIG_SCHEMA
+    async_register_admin_service(
+        hass, DOMAIN, SERVICE_CGI, async_cgi, schema=CGI_SCHEMA
+    )
+    async_register_admin_service(
+        hass, DOMAIN, SERVICE_SET_CONFIG, async_set_config, schema=SET_CONFIG_SCHEMA
     )

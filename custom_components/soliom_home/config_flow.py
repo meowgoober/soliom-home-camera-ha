@@ -187,7 +187,7 @@ class SoliomHomeConfigFlow(ConfigFlow, domain=DOMAIN):
             else:
                 return self.async_update_reload_and_abort(
                     entry,
-                    data={
+                    data_updates={
                         CONF_PASSWORD: password,
                         CONF_HOST: api.host,
                     },

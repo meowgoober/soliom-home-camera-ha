@@ -53,7 +53,7 @@ async def async_setup_entry(
         return
     entities: list[SoliomConfigSwitch] = []
     for device, node in coordinator.data.camera_nodes():
-        if resolve_local(entry, device, node) is None:
+        if resolve_local(hass, entry, device, node) is None:
             continue
         for key, translation_key, config_name, state_key, enabled in SWITCHES:
             entities.append(
@@ -112,7 +112,7 @@ class SoliomConfigSwitch(SoliomBaseEntity, SwitchEntity):
         device = self.device
         if device is None:
             return None
-        return resolve_local(self.entry, device, self.node)
+        return resolve_local(self.coordinator.hass, self.entry, device, self.node)
 
     @property
     def available(self) -> bool:

@@ -22,6 +22,7 @@ from urllib.parse import quote, urlparse
 
 import aiohttp
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
@@ -115,6 +116,7 @@ class LocalCamera:
     verify_ssl: bool
     device: SoliomDevice
     options: dict[str, Any]
+    hass: HomeAssistant
     camera_sn: str | None = None
 
     @property
@@ -154,7 +156,7 @@ class LocalCamera:
 
     async def async_request(self, path_or_url: str) -> tuple[int, bytes, str]:
         """Fetch a local URL, trying digest and then basic authentication."""
-        session = async_get_clientsession()
+        session = async_get_clientsession(self.hass)
         url = self.url_for(path_or_url)
         auth_options: list[aiohttp.BasicAuth | aiohttp.DigestAuth] = [
             aiohttp.DigestAuth(self.username, self.password),
@@ -208,6 +210,7 @@ class LocalCamera:
 
 
 def build_local_camera(
+    hass: HomeAssistant,
     entry: ConfigEntry,
     device: SoliomDevice,
     node: SoliomNode | None = None,
@@ -235,6 +238,7 @@ def build_local_camera(
         verify_ssl=bool(options.get(CONF_VERIFY_SSL, False)),
         device=device,
         options=options,
+        hass=hass,
         camera_sn=node.sn if node else None,
     )
 
@@ -316,6 +320,7 @@ def runtime_local_ports(entry: ConfigEntry) -> dict[str, set[int]]:
 
 
 def resolve_local(
+    hass: HomeAssistant,
     entry: ConfigEntry,
     device: SoliomDevice,
     node: SoliomNode | None = None,
@@ -327,7 +332,7 @@ def resolve_local(
     avoids creating broken switches/streams for homebases with no local API.
     """
     options = effective_options(entry, (node or device.base_node()).sn, device.sn)
-    local = build_local_camera(entry, device, node, options)
+    local = build_local_camera(hass, entry, device, node, options)
     if local is None:
         return None
     if _explicit_local(options):

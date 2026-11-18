@@ -90,7 +90,7 @@ class SoliomCamera(SoliomBaseEntity, Camera):
         # _webrtc_provider to exist when the entity is added.
         Camera.__init__(self)
         self._attr_unique_id = f"{self._sn}_camera"
-        self._local: LocalCamera | None = resolve_local(entry, device, node)
+        self._local: LocalCamera | None = resolve_local(coordinator.hass, entry, device, node)
         self._options = effective_options(entry, self._sn, device.sn)
         self._last_image: bytes | None = None
         self._last_image_time: float = 0.0
@@ -234,7 +234,6 @@ class SoliomCamera(SoliomBaseEntity, Camera):
             "last_event_time": (
                 latest.start_time.isoformat() if latest and latest.start_time else None
             ),
-            "last_event_thumbnail": latest.thumb_url if latest else None,
         }
 
     # ------------------------------------------------------------------
@@ -296,6 +295,10 @@ class SoliomCamera(SoliomBaseEntity, Camera):
     async def async_run_cgi(self, path: str) -> str:
         if self._local is None:
             raise HomeAssistantError("No local host is configured for this camera")
+        # Only the configured camera's CGI tree; absolute URLs would leak the
+        # stored credentials to another host.
+        if not path.startswith("/cgi-bin/"):
+            raise HomeAssistantError("path must start with /cgi-bin/")
         return await self._local.async_text(path)
 
     async def async_get_config(self, name: str) -> str:

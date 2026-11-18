@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .const import CONF_PASSWORD
 from .device import SoliomDevice
+
+TO_REDACT = {CONF_PASSWORD, "email", "title", "ip_addr", "ssid"}
 
 _LUT = bytes.fromhex(
     "4959433db5bf6da347534f6165e371e9677f02030badb3892b2f35c16b8b959711e5a70deff1050783fb9d3bc5c713171d1f2529d3df"
@@ -79,14 +82,12 @@ async def async_get_config_entry_diagnostics(
     coordinator = runtime.coordinator
     data = coordinator.data
 
-    return {
+    return async_redact_data(
+        {
         "entry": {
             "title": entry.title,
             "version": entry.version,
-            "data": {
-                key: ("**REDACTED**" if key == CONF_PASSWORD else value)
-                for key, value in entry.data.items()
-            },
+            "data": dict(entry.data),
             "options": {
                 "scan_interval": entry.options.get("scan_interval"),
                 "local_device_count": len(entry.options.get("devices") or {}),
@@ -123,4 +124,6 @@ async def async_get_config_entry_diagnostics(
             if data
             else {}
         ),
-    }
+    },
+        TO_REDACT,
+    )

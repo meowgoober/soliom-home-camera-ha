@@ -11,7 +11,6 @@ while somebody is looking.
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import secrets
 import struct
@@ -24,8 +23,6 @@ from .ppcs import (
     CMD_LIVE_ADD,
     CMD_LIVE_CLOSE,
     CMD_LIVE_ENABLE,
-    CMD_HEART_BEATS,
-    CMD_LIVE_KEEPALIVE,
     CMD_LIVE_REMOVE,
     CMD_LOGIN,
     ChannelStream,
@@ -329,24 +326,6 @@ class _Session(threading.Thread):
 
                 if now - last_hb > HEARTBEAT_SECONDS:
                     conn.sock.sendto(P.pppp(P.MSG_ALIVE), conn.peer)  # transport-level ALIVE from us
-                    if wanted:
-                        # The app's homebase heartbeat is {gateway_sn, channel} but the channel
-                        # (and whether camera_sn is included) is unknown: send every plausible shape.
-                        bodies = [{"gateway_sn": creds.sn, "channel": 0}]
-                        for sn, ch in wanted.items():
-                            bodies.append({"gateway_sn": creds.sn, "channel": ch})
-                            bodies.append({"gateway_sn": creds.sn, "camera_sn": sn, "channel": ch})
-                        bodies += [{**b, "videoKeepAlive_2": VIDEO_KEEPALIVE} for b in list(bodies)]
-                        sent: set[str] = set()
-                        for body in bodies:
-                            key = json.dumps(body, sort_keys=True)
-                            if key not in sent:
-                                sent.add(key)
-                                self._send(conn, CMD_LIVE_KEEPALIVE, body, creds)
-                        self._send(conn, CMD_LIVE_KEEPALIVE, bodies[0], creds, enc=0)
-                        # generic session heartbeat (HEART_BEATS), body shape unknown
-                        self._send(conn, CMD_HEART_BEATS, {"channel": 0}, creds)
-                        self._send(conn, CMD_HEART_BEATS, {"gateway_sn": creds.sn, "channel": 0}, creds)
                     last_hb = now
 
                 if now - last_check > 5.0:

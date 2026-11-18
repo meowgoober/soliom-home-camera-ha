@@ -29,7 +29,7 @@ async def async_setup_entry(
     entities = [
         SoliomRebootButton(coordinator, entry, device, node)
         for device, node in coordinator.data.camera_nodes()
-        if resolve_local(entry, device, node) is not None
+        if resolve_local(hass, entry, device, node) is not None
     ]
     async_add_entities(entities)
 
@@ -54,7 +54,7 @@ class SoliomRebootButton(SoliomBaseEntity, ButtonEntity):
         device = self.device
         if device is None:
             return
-        local = resolve_local(self.entry, device, self.node)
+        local = resolve_local(self.coordinator.hass, self.entry, device, self.node)
         if local is None:
             return
         await local.async_text(CGI_REBOOT)
